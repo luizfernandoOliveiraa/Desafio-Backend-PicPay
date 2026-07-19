@@ -2,12 +2,18 @@ package com.paypic.Payments.entities.transaction;
 
 import com.paypic.Payments.entities.client.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity(name = "transactions")
 @Table(name = "tb_transactions")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Transaction {
 
     @Id
