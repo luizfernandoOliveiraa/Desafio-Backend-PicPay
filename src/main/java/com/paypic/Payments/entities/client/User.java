@@ -1,4 +1,4 @@
-package com.paypic.Payments.entities;
+package com.paypic.Payments.entities.client;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-@Entity
-@Table(name = "tb_clientes")
+@Entity(name = "users")
+@Table(name = "tb_users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteModel implements Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,11 +28,14 @@ public class ClienteModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoPessoa tipoPessoa; // PF ou PJ
 
-    private String nomeCompleto;
+    private String firstName;
+
+    private String lastName;
 
     @Column(unique = true)
     private String email;
 
     private String senha;
 
+    private BigDecimal saldo;
 }
