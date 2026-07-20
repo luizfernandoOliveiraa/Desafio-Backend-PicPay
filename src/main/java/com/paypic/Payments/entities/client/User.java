@@ -1,5 +1,7 @@
 package com.paypic.Payments.entities.client;
 
+import com.paypic.Payments.dto.user.UserResponseDTO;
+import com.paypic.Payments.utils.exceptions.SaldoInsuficienteException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,4 +41,15 @@ public class User implements Serializable {
     private String senha;
 
     private BigDecimal saldo;
+
+    public void debitar(BigDecimal valor){
+        if (this.saldo.compareTo(valor) < 0){
+            throw new SaldoInsuficienteException("Saldo insuficiente para realizar a transferência");
+        }
+        this.saldo = this.saldo.subtract(valor);
+    }
+
+    public void creditar(BigDecimal valor){
+        this.saldo = this.saldo.add(valor);
+    }
 }
