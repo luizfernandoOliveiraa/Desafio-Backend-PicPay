@@ -13,7 +13,6 @@ public class UserRequestMapper {
 
     public User map(UserRequestDTO userRequestDTO){
         User userModel = new User();
-        userModel.setId(userRequestDTO.getId());
         userModel.setEmail(userRequestDTO.getEmail());
         userModel.setSaldo(userRequestDTO.getSaldo());
         userModel.setSenha(userRequestDTO.getSenha());

@@ -14,7 +14,8 @@ public class UserResponseMapper {
         userResponseDTO.setLastName(userResponseDTO.getLastName());
         userResponseDTO.setEmail(userModel.getEmail());
         userResponseDTO.setSaldo(userModel.getSaldo());
-        userResponseDTO.setDocumentoIdentificacao(userModel.getDocumentoIdentificacao());
+        userResponseDTO.setTipoCliente(userModel.getTipoCliente());
+        userResponseDTO.setTipoPessoa(userModel.getTipoPessoa());
         return userResponseDTO;
     }
 }
