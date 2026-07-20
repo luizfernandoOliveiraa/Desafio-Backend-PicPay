@@ -1,5 +1,7 @@
 package com.paypic.Payments.dto.user;
 
+import com.paypic.Payments.entities.client.TipoCliente;
+import com.paypic.Payments.entities.client.TipoPessoa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,11 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UserResponseDTO {
 
-    private Long Id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private BigDecimal saldo;
-    private String documentoIdentificacao;
+    private TipoCliente tipoCliente;
+    private TipoPessoa tipoPessoa;
 
 }

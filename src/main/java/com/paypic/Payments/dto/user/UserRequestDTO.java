@@ -13,16 +13,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UserRequestDTO {
 
-
-    private Long id;
-    private String documentoIdentificacao;
-    private TipoCliente tipoCliente;
-    private TipoPessoa tipoPessoa;
     private String firstName;
     private String lastName;
     private String email;
-    private String senha;
     private BigDecimal saldo;
-
+    private String documentoIdentificacao;
+    private TipoCliente tipoCliente;
+    private TipoPessoa tipoPessoa;
+    private String senha;
 
 }
