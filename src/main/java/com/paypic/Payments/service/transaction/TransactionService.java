@@ -5,35 +5,34 @@ import com.paypic.Payments.dto.transaction.TransactionResponseDTO;
 import com.paypic.Payments.entities.client.TipoCliente;
 import com.paypic.Payments.entities.client.User;
 import com.paypic.Payments.entities.transaction.Transaction;
-import com.paypic.Payments.mapper.transaction.TransactionRequestMapper;
 import com.paypic.Payments.mapper.transaction.TransactionResponseMapper;
 import com.paypic.Payments.mapper.user.UserResponseMapper;
 import com.paypic.Payments.repositories.TransactionRepository;
 import com.paypic.Payments.service.user.UserService;
 import com.paypic.Payments.service.auth.AuthorizationService;
 import com.paypic.Payments.service.notification.NotificationService;
-import com.paypic.Payments.utils.exceptions.ClienteSemAutorizacaoParaTransferir;
-import com.paypic.Payments.utils.exceptions.SaldoInsuficienteException;
+import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferir;
+import com.paypic.Payments.exceptions.SaldoInsuficienteException;
+import com.paypic.Payments.exceptions.TransacaoNaoEncontrada;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionResponseMapper transactionResponseMapper;
-    private final TransactionRequestMapper transactionRequestMapper;
     private final UserService userService;
     private final AuthorizationService authorizationService;
     private final NotificationService notificationService;
     private final UserResponseMapper userResponseMapper;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionRequestMapper transactionRequestMapper, TransactionResponseMapper transactionResponseMapper, UserService userService, AuthorizationService authorizationService, NotificationService notificationService, UserResponseMapper userResponseMapper) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionResponseMapper transactionResponseMapper, UserService userService, AuthorizationService authorizationService, NotificationService notificationService, UserResponseMapper userResponseMapper) {
         this.transactionRepository = transactionRepository;
-        this.transactionRequestMapper = transactionRequestMapper;
         this.transactionResponseMapper = transactionResponseMapper;
         this.userService = userService;
         this.authorizationService = authorizationService;
@@ -43,8 +42,8 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponseDTO realizarTransferencia(TransactionRequestDTO dto) {
-        User sender = userService.buscarClienteEntity(dto.getSender().getId());
-        User receiver = userService.buscarClienteEntity(dto.getReceiver().getId());
+        User sender = userService.buscarClienteEntity(dto.getSenderId());
+        User receiver = userService.buscarClienteEntity(dto.getReceiverId());
         BigDecimal amount = dto.getAmount();
 
         validarTransferencia(sender, amount);
@@ -52,7 +51,7 @@ public class TransactionService {
         sender.debitar(amount);
         receiver.creditar(amount);
 
-        Transaction transaction = criarTransacao(dto, sender, receiver, amount);
+        Transaction transaction = criarTransacao(sender, receiver, amount);
         transactionRepository.save(transaction);
 
         userService.salvarCliente(sender);
@@ -83,8 +82,8 @@ public class TransactionService {
         }
     }
 
-    private Transaction criarTransacao(TransactionRequestDTO dto, User sender, User receiver, BigDecimal amount){
-        Transaction transaction = transactionRequestMapper.map(dto);
+    private Transaction criarTransacao(User sender, User receiver, BigDecimal amount){
+        Transaction transaction = new Transaction();
         transaction.setSender(sender);
         transaction.setReceiver(receiver);
         transaction.setAmount(amount);
@@ -92,4 +91,18 @@ public class TransactionService {
         return transaction;
     }
 
+    public List<TransactionResponseDTO> listarTransacoes(){
+        List<Transaction> transacoes = transactionRepository.findAll();
+        return transacoes.stream()
+                .map(transactionResponseMapper::map)
+                .toList();
+    }
+
+
+
+    public TransactionResponseDTO listarTransacaoPorID(Long id){
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new TransacaoNaoEncontrada("Transação não encontrada"));
+        return transactionResponseMapper.map(transaction);
+    }
 }
