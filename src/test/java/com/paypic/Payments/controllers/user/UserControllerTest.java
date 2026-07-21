@@ -7,7 +7,7 @@ import com.paypic.Payments.entities.client.TipoCliente;
 import com.paypic.Payments.entities.client.TipoPessoa;
 import com.paypic.Payments.handlers.user.GlobalUserExceptionHandler;
 import com.paypic.Payments.service.user.UserService;
-import com.paypic.Payments.utils.exceptions.UsuarioJaExisteException;
+import com.paypic.Payments.exceptions.UsuarioJaExisteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

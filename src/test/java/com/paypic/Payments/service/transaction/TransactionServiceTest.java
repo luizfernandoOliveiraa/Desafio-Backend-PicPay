@@ -7,15 +7,14 @@ import com.paypic.Payments.entities.client.TipoCliente;
 import com.paypic.Payments.entities.client.TipoPessoa;
 import com.paypic.Payments.entities.client.User;
 import com.paypic.Payments.entities.transaction.Transaction;
-import com.paypic.Payments.mapper.transaction.TransactionRequestMapper;
 import com.paypic.Payments.mapper.transaction.TransactionResponseMapper;
 import com.paypic.Payments.mapper.user.UserResponseMapper;
 import com.paypic.Payments.repositories.TransactionRepository;
 import com.paypic.Payments.service.auth.AuthorizationService;
 import com.paypic.Payments.service.notification.NotificationService;
 import com.paypic.Payments.service.user.UserService;
-import com.paypic.Payments.utils.exceptions.ClienteSemAutorizacaoParaTransferir;
-import com.paypic.Payments.utils.exceptions.SaldoInsuficienteException;
+import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferir;
+import com.paypic.Payments.exceptions.SaldoInsuficienteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,9 +40,6 @@ public class TransactionServiceTest {
 
     @Mock
     private TransactionResponseMapper transactionResponseMapper;
-
-    @Mock
-    private TransactionRequestMapper transactionRequestMapper;
 
     @Mock
     private UserService userService;
@@ -78,7 +74,7 @@ public class TransactionServiceTest {
         receiver.setId(2L);
         receiver.setSaldo(new BigDecimal("50.00"));
 
-        transactionRequestDTO = new TransactionRequestDTO(new BigDecimal("25.00"), sender, receiver);
+        transactionRequestDTO = new TransactionRequestDTO(new BigDecimal("25.00"), 1L, 2L);
 
         transaction = new Transaction();
         transaction.setId(1L);
@@ -87,7 +83,7 @@ public class TransactionServiceTest {
         transaction.setAmount(new BigDecimal("25.00"));
         transaction.setTimestamp(LocalDateTime.now());
 
-        transactionResponseDTO = new TransactionResponseDTO(1L, new BigDecimal("25.00"), receiver, transaction.getTimestamp());
+        transactionResponseDTO = new TransactionResponseDTO(1L, new BigDecimal("25.00"), receiver.getId(), transaction.getTimestamp());
         userResponseDTO = new UserResponseDTO(2L, "Jane", "Doe", "jane.doe@example.com", new BigDecimal("75.00"), TipoCliente.COMUM, TipoPessoa.PF);
     }
 
@@ -97,7 +93,6 @@ public class TransactionServiceTest {
         when(userService.buscarClienteEntity(1L)).thenReturn(sender);
         when(userService.buscarClienteEntity(2L)).thenReturn(receiver);
         when(authorizationService.isAuthorized()).thenReturn(true);
-        when(transactionRequestMapper.map(any(TransactionRequestDTO.class))).thenReturn(transaction);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
         when(transactionResponseMapper.map(any(Transaction.class))).thenReturn(transactionResponseDTO);
         when(userResponseMapper.map(receiver)).thenReturn(userResponseDTO);
