@@ -1,6 +1,5 @@
 package com.paypic.Payments.dto.transaction;
 
-import com.paypic.Payments.entities.client.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
