@@ -24,6 +24,7 @@ public class UserRequestMapper {
         DocumentoIdentificacao documento = userRequestDTO.getTipoPessoa() == TipoPessoa.PF
                 ? Cpf.of(userRequestDTO.getDocumentoIdentificacao())
                 : Cnpj.of(userRequestDTO.getDocumentoIdentificacao());
+        userModel.setDocumentoIdentificacao(String.valueOf(documento));
         return userModel;
     }
 

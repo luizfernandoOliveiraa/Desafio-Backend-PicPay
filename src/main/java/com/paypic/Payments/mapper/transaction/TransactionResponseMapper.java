@@ -11,7 +11,7 @@ public class TransactionResponseMapper {
         TransactionResponseDTO transactionResponseDTO = new TransactionResponseDTO();
         transactionResponseDTO.setId(transaction.getId());
         transactionResponseDTO.setAmount(transaction.getAmount());
-        transactionResponseDTO.setReceiver(transaction.getReceiver());
+        transactionResponseDTO.setReceiverId(transaction.getReceiver().getId());
         transactionResponseDTO.setTimestamp(transaction.getTimestamp());
         return transactionResponseDTO;
     }
