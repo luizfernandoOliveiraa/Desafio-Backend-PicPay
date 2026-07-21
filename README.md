@@ -128,7 +128,18 @@ A aplicação estará disponível em `http://localhost:8080`.
 
 ---
 
-## 📋 Endpoints Principais
+## 📋 Endpoints RESTful
+
+| Recurso | Método HTTP | Endpoint | Descrição |
+| :--- | :--- | :--- | :--- |
+| **Usuários** | `POST` | `/users` | Cadastra um novo cliente |
+| **Usuários** | `GET` | `/users` | Lista todos os clientes cadastrados |
+| **Usuários** | `GET` | `/users/{id}` | Busca os detalhes de um cliente por ID |
+| **Usuários** | `PUT` | `/users/{id}` | Atualiza o cadastro de um cliente |
+| **Usuários** | `DELETE` | `/users/{id}` | Deleta um cliente por ID |
+| **Transações** | `POST` | `/transactions/transfer` | Realiza uma transferência financeira |
+| **Transações** | `GET` | `/transactions` | Lista todas as transações realizadas |
+| **Transações** | `GET` | `/transactions/{id}` | Busca detalhes de uma transação por ID |
 
 ### 1. Criar Usuário (`POST /users`)
 ```json

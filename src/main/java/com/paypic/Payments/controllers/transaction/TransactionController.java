@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +30,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "200", description = "API funcionando!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    public ResponseEntity<String> verificarSaudeApi(){
+    public ResponseEntity<String> verificarSaudeApi() {
         return ResponseEntity.ok("API funcionando!");
     }
 
@@ -50,21 +52,19 @@ public class TransactionController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public ResponseEntity<TransactionResponseDTO> listarTransacaoPorID(
-            @Parameter(description = "ID da transação", required = true)
-            @PathVariable Long id) {
+            @Parameter(description = "ID da transação", required = true) @PathVariable Long id) {
         TransactionResponseDTO transaction = transactionService.listarTransacaoPorID(id);
         return ResponseEntity.ok(transaction);
     }
 
     @PostMapping("/transfer")
-    @Operation(summary = "Cria a transaçaõ", description = "Endpoint utilizado para transferencias entre clientes")
+    @Operation(summary = "Cria a transação", description = "Endpoint utilizado para transferencias entre clientes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Transação realizada com sucesso!"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     public ResponseEntity<TransactionResponseDTO> realizarTransferencia(
-            @Parameter(description = "Body da transação contendo os dados da transação", required = true)
-            @RequestBody TransactionRequestDTO dto) {
+            @Parameter(description = "Body da transação contendo os dados da transação", required = true) @Valid @RequestBody TransactionRequestDTO dto) {
         TransactionResponseDTO transaction = transactionService.realizarTransferencia(dto);
         return ResponseEntity.ok(transaction);
     }

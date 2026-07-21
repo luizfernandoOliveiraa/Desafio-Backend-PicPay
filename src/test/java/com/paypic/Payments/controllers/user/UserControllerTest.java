@@ -73,7 +73,7 @@ public class UserControllerTest {
         when(userService.criarNovoCliente(any(UserRequestDTO.class))).thenReturn(userResponseDTO);
 
         // Executa a requisição POST e verifica os resultados
-        mockMvc.perform(post("/users/criarCliente")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequestDTO)))
                 .andExpect(status().isCreated())
@@ -88,7 +88,7 @@ public class UserControllerTest {
                 .thenThrow(new UsuarioJaExisteException("Usuário com este email já existe."));
 
         // Executa a requisição POST e verifica se o status 409 (Conflict) e a mensagem de erro no JSON são retornados
-        mockMvc.perform(post("/users/criarCliente")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userRequestDTO)))
                 .andExpect(status().isConflict())

@@ -35,7 +35,7 @@ public class UserController {
         return ResponseEntity.ok("API funcionando!");
     }
 
-    @PostMapping("/criarCliente") // Corrigido para camelCase
+    @PostMapping
     @Operation(summary = "Cria um novo cliente", description = "Endpoint utilizado para criar um novo cliente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso!"),
@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
 
-    @GetMapping("/procurar/cliente/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Procura um cliente por ID", description = "Endpoint utilizado para procurar um cliente por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso!"),
@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(userEncontrado);
     }
 
-    @GetMapping("/procurar/todosClientes") // Corrigido para camelCase
+    @GetMapping
     @Operation(summary = "Procura todos os clientes", description = "Endpoint utilizado para procurar todos os clientes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso!"),
@@ -70,7 +70,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @DeleteMapping("/deletar/cliente/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deleta um cliente por ID", description = "Endpoint utilizado para deletar um cliente por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente deletado com sucesso!"),
@@ -82,7 +82,7 @@ public class UserController {
         return ResponseEntity.ok("Cliente deletado com sucesso");
     }
 
-    @PutMapping("/atualizar/cliente/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Atualiza um cliente por ID", description = "Endpoint utilizado para atualizar um cliente por ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso!"),
