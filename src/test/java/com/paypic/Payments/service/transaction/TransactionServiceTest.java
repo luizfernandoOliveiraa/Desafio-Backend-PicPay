@@ -13,7 +13,7 @@ import com.paypic.Payments.repositories.TransactionRepository;
 import com.paypic.Payments.service.auth.AuthorizationService;
 import com.paypic.Payments.service.notification.NotificationService;
 import com.paypic.Payments.service.user.UserService;
-import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferir;
+import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferirException;
 import com.paypic.Payments.exceptions.SaldoInsuficienteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -138,7 +138,7 @@ public class TransactionServiceTest {
         when(userService.buscarClienteEntity(1L)).thenReturn(sender);
         when(userService.buscarClienteEntity(2L)).thenReturn(receiver);
 
-        Exception exception = assertThrows(ClienteSemAutorizacaoParaTransferir.class, () -> {
+        Exception exception = assertThrows(ClienteSemAutorizacaoParaTransferirException.class, () -> {
             transactionService.realizarTransferencia(transactionRequestDTO);
         });
 
@@ -151,7 +151,7 @@ public class TransactionServiceTest {
         when(userService.buscarClienteEntity(2L)).thenReturn(receiver);
         when(authorizationService.isAuthorized()).thenReturn(false);
 
-        Exception exception = assertThrows(ClienteSemAutorizacaoParaTransferir.class, () -> {
+        Exception exception = assertThrows(ClienteSemAutorizacaoParaTransferirException.class, () -> {
             transactionService.realizarTransferencia(transactionRequestDTO);
         });
 
