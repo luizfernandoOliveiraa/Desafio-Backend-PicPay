@@ -1,10 +1,12 @@
 package com.paypic.Payments.service.notification;
 
 import com.paypic.Payments.dto.user.UserResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @Service
 public class NotificationService {
 
@@ -17,13 +19,12 @@ public class NotificationService {
     @Async
     public void sendNotification(UserResponseDTO user, String message) {
         String email = user.getEmail();
-        // Simulating sending notification
-        System.out.println("Enviando notificação para " + email);
+        log.info("Iniciando envio de notificação assíncrona para: {}", email);
         try {
             restTemplate.postForEntity("https://util.devi.tools/api/v1/notify", message, String.class);
-            System.out.println("Notificação enviada com sucesso");
+            log.info("Notificação enviada com sucesso para: {}", email);
         } catch (Exception e) {
-            System.err.println("Erro ao enviar notificação: " + e.getMessage());
+            log.error("Falha ao enviar notificação para {}: {}", email, e.getMessage());
         }
     }
 }

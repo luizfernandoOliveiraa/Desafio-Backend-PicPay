@@ -11,16 +11,18 @@ import com.paypic.Payments.repositories.TransactionRepository;
 import com.paypic.Payments.service.user.UserService;
 import com.paypic.Payments.service.auth.AuthorizationService;
 import com.paypic.Payments.service.notification.NotificationService;
-import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferir;
+import com.paypic.Payments.exceptions.ClienteSemAutorizacaoParaTransferirException;
 import com.paypic.Payments.exceptions.SaldoInsuficienteException;
-import com.paypic.Payments.exceptions.TransacaoNaoEncontrada;
+import com.paypic.Payments.exceptions.TransacaoNaoEncontradaException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 public class TransactionService {
 
@@ -42,6 +44,7 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponseDTO realizarTransferencia(TransactionRequestDTO dto) {
+        log.info("Iniciando processo de transferência de senderId={} para receiverId={}, valor={}", dto.getSenderId(), dto.getReceiverId(), dto.getAmount());
         User sender = userService.buscarClienteEntity(dto.getSenderId());
         User receiver = userService.buscarClienteEntity(dto.getReceiverId());
         BigDecimal amount = dto.getAmount();
@@ -57,6 +60,8 @@ public class TransactionService {
         userService.salvarCliente(sender);
         userService.salvarCliente(receiver);
 
+        log.info("Transferência efetuada com sucesso. id={}, valor={}", transaction.getId(), amount);
+
         notificationService.sendNotification(userResponseMapper.map(receiver), "Transação Recebida no valor de R$ " + amount);
 
         return transactionResponseMapper.map(transaction);
@@ -70,7 +75,7 @@ public class TransactionService {
 
     private void temAutorizacaoParaTransferir(User userAutorizado){
         if (userAutorizado.getTipoCliente() == TipoCliente.LOJISTA){
-            throw  new ClienteSemAutorizacaoParaTransferir("Lojistas não podem realizar transferências");
+            throw  new ClienteSemAutorizacaoParaTransferirException("Lojistas não podem realizar transferências");
         }
     }
 
@@ -78,7 +83,7 @@ public class TransactionService {
         temAutorizacaoParaTransferir(sender);
         temSaldoParaTransferir(sender, valor);
         if (!authorizationService.isAuthorized()){
-            throw new ClienteSemAutorizacaoParaTransferir("Cliente não autorizado para realizar a transferência");
+            throw new ClienteSemAutorizacaoParaTransferirException("Cliente não autorizado para realizar a transferência");
         }
     }
 
@@ -102,7 +107,7 @@ public class TransactionService {
 
     public TransactionResponseDTO listarTransacaoPorID(Long id){
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new TransacaoNaoEncontrada("Transação não encontrada"));
+                .orElseThrow(() -> new TransacaoNaoEncontradaException("Transação não encontrada"));
         return transactionResponseMapper.map(transaction);
     }
 }
