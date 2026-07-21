@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class TransactionRequestDTO {
 
     private BigDecimal amount;
-    private User sender;
-    private User receiver;
+    private Long senderId;
+    private Long receiverId;
 
 }

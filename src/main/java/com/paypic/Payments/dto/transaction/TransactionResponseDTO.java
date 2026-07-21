@@ -15,6 +15,6 @@ public class TransactionResponseDTO {
 
     private Long id;
     private BigDecimal amount;
-    private User receiver;
+    private Long receiverId;
     private LocalDateTime timestamp;
 }
