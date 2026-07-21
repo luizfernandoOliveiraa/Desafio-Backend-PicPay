@@ -1,5 +1,8 @@
 package com.paypic.Payments.entities.client.valueObjects;
 
+import com.paypic.Payments.exceptions.DocumentoInvalidoException;
+
+import javax.print.Doc;
 import java.util.Objects;
 
 public final class Cnpj implements DocumentoIdentificacao {
@@ -12,7 +15,7 @@ public final class Cnpj implements DocumentoIdentificacao {
     public static Cnpj of(String valor) {
         String digits = valor == null ? "" : valor.replaceAll("\\D", "");
         if (!isValido(digits)) {
-            throw new IllegalArgumentException("CNPJ inválido: " + valor);
+            throw new DocumentoInvalidoException("CNPJ inválido: " + valor);
         }
         return new Cnpj(digits);
     }

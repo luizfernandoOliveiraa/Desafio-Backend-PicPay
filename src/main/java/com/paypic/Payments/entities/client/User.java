@@ -1,7 +1,6 @@
 package com.paypic.Payments.entities.client;
 
-import com.paypic.Payments.dto.user.UserResponseDTO;
-import com.paypic.Payments.utils.exceptions.SaldoInsuficienteException;
+import com.paypic.Payments.exceptions.SaldoInsuficienteException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity(name = "users")
 @Table(name = "tb_users")

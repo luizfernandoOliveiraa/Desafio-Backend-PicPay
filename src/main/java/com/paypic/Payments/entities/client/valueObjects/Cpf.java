@@ -1,5 +1,6 @@
 package com.paypic.Payments.entities.client.valueObjects;
 
+import com.paypic.Payments.exceptions.DocumentoInvalidoException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public final class Cpf implements DocumentoIdentificacao {
     public static Cpf of(String valor) {
         String digits = valor == null ? "" : valor.replace("\\D", "");
         if (!isValido(digits)) {
-            throw  new IllegalArgumentException("CPF inválido: " + valor);
+            throw  new DocumentoInvalidoException("CPF inválido: " + valor);
         }
         return new Cpf(digits);
     }
