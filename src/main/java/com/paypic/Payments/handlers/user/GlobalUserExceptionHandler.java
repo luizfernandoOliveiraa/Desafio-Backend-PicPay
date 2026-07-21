@@ -1,8 +1,6 @@
 package com.paypic.Payments.handlers.user;
 
-import com.paypic.Payments.utils.exceptions.ClienteNaoEncontradoException;
-import com.paypic.Payments.utils.exceptions.ClienteSemAutorizacaoParaTransferir;
-import com.paypic.Payments.utils.exceptions.UsuarioJaExisteException;
+import com.paypic.Payments.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,6 +25,21 @@ public class GlobalUserExceptionHandler {
     @ExceptionHandler(ClienteSemAutorizacaoParaTransferir.class)
     public ResponseEntity<Object> handleSemAutorizacao(ClienteSemAutorizacaoParaTransferir ex) {
         return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(SaldoInsuficienteException.class)
+    public ResponseEntity<Object> hadleClienteSemSaldo(SaldoInsuficienteException ex){
+        return buildResponse(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
+    }
+
+    @ExceptionHandler(TransacaoNaoEncontrada.class)
+    public ResponseEntity<Object> handleTransacaoNaoEncontrada(TransacaoNaoEncontrada ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(DocumentoInvalidoException.class)
+    public ResponseEntity<Object> handleDocumentoInvalido(DocumentoInvalidoException ex){
+        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
